@@ -14,22 +14,22 @@ class DatabaseSeeder extends Seeder
     {
         // 1. Akun Demo Tiga Peran (Password: password123)
         $pelapor = User::create([
-            'nama_lengkap' => 'Andi Pratama',
-            'username'     => 'andi',
+            'nama_lengkap' => 'Salman af',
+            'username'     => 'Salman',
             'password'     => Hash::make('password123'),
             'role'         => 'pelapor',
         ]);
 
         $relawan = User::create([
-            'nama_lengkap' => 'Sari Indah',
-            'username'     => 'sari',
+            'nama_lengkap' => 'Kevin akbar',
+            'username'     => 'Kevin',
             'password'     => Hash::make('password123'),
             'role'         => 'relawan',
         ]);
 
         $koordinator = User::create([
-            'nama_lengkap' => 'Budi Santoso',
-            'username'     => 'budi',
+            'nama_lengkap' => 'Raditya dika',
+            'username'     => 'Raditya',
             'password'     => Hash::make('password123'),
             'role'         => 'koordinator',
         ]);
