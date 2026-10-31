@@ -82,7 +82,7 @@
     </div>
 
     @if (auth()->user()->role === 'pelapor')
-        <a href="#" class="btn-create">+ Buat Laporan Baru</a>
+        <a href="{{ route('reports.create') }}" class="btn-create">+ Buat Laporan Baru</a>
     @endif
 </div>
 

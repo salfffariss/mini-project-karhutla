@@ -34,4 +34,45 @@ class ReportController extends Controller
 
         return view('dashboard', compact('reports', 'stats'));
     }
+
+    public function create()
+    {
+        if (auth()->user()->role !== 'pelapor') {
+            abort(403, 'Hanya warga/pelapor yang dapat membuat laporan baru.');
+        }
+        $areas = Area::all();
+        return view('reports.create', compact('areas'));
+    }
+     
+    public function store(Request $request)
+    {
+        if (auth()->user()->role !== 'pelapor') {
+            abort(403);
+        }
+        $validated = $request->validate([
+            'area_id'           => 'required|exists:areas,id',
+            'judul'             => 'required|string|max:255',
+            'deskripsi_kondisi' => 'required|string',
+            'waktu_kejadian'    => 'required|date',
+            'latitude'          => 'required|numeric|between:-90,90',
+            'longitude'         => 'required|numeric|between:-180,180',
+            'evidence'          => 'nullable|image|max:2048', // foto bukti opsional max 2MB
+        ]);
+        $evidencePath = null;
+        if ($request->hasFile('evidence')) {
+            $evidencePath = $request->file('evidence')->store('evidence', 'public');
+        }
+        Report::create([
+            'user_id'           => auth()->id(),
+            'area_id'           => $validated['area_id'],
+            'judul'             => $validated['judul'],
+            'deskripsi_kondisi' => $validated['deskripsi_kondisi'],
+            'waktu_kejadian'    => $validated['waktu_kejadian'],
+            'latitude'          => $validated['latitude'],
+            'longitude'         => $validated['longitude'],
+            'evidence_path'     => $evidencePath,
+            'status'            => 'menunggu_tinjauan',
+        ]);
+        return redirect()->route('dashboard')->with('success', 'Laporan kejadian karhutla berhasil dikirim dan menunggu tinjauan relawan.');
+    }
 }

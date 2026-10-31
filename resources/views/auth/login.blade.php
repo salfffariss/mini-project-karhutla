@@ -13,20 +13,17 @@
 
     <div class="w-full max-w-sm border border-neutral-200 rounded-lg p-8 bg-white shadow-sm">
         
-        <!-- Header Minimalis Tanpa Logo -->
         <div class="mb-8">
             <h1 class="text-xl font-bold tracking-tight text-neutral-900">Sistem Karhutla</h1>
             <p class="text-xs text-neutral-500 mt-1">Pemantauan & Pelaporan Kebakaran Hutan</p>
         </div>
 
-        <!-- Alert Error Validasi -->
         @if ($errors->any())
             <div class="mb-5 p-3 border border-neutral-300 bg-neutral-50 text-neutral-800 text-xs rounded">
                 {{ $errors->first() }}
             </div>
         @endif
 
-        <!-- Form Login -->
         <form action="{{ url('/login') }}" method="POST" class="space-y-4">
             @csrf
 
@@ -64,18 +61,17 @@
             </button>
         </form>
 
-        <!-- Shortcut Demo Account (Memudahkan Dosen / Penguji) -->
         <div class="mt-8 pt-6 border-t border-neutral-100">
             <p class="text-[11px] font-medium text-neutral-500 mb-2">Akun Demo Cepat (Klik untuk isi):</p>
             <div class="flex flex-col gap-1.5 text-xs">
-                <button type="button" onclick="fillDemo('andi', 'password123')" class="text-left px-2 py-1.5 border border-neutral-200 rounded hover:bg-neutral-50">
-                    <span class="font-medium">andi</span> <span class="text-neutral-400">· Pelapor</span>
+                <button type="button" onclick="fillDemo('Salman', 'password123')" class="text-left px-2 py-1.5 border border-neutral-200 rounded hover:bg-neutral-50">
+                    <span class="font-medium">Salman</span> <span class="text-neutral-400">· Pelapor</span>
                 </button>
-                <button type="button" onclick="fillDemo('sari', 'password123')" class="text-left px-2 py-1.5 border border-neutral-200 rounded hover:bg-neutral-50">
-                    <span class="font-medium">sari</span> <span class="text-neutral-400">· Relawan</span>
+                <button type="button" onclick="fillDemo('Kevin', 'password123')" class="text-left px-2 py-1.5 border border-neutral-200 rounded hover:bg-neutral-50">
+                    <span class="font-medium">Kevin</span> <span class="text-neutral-400">· Relawan</span>
                 </button>
-                <button type="button" onclick="fillDemo('budi', 'password123')" class="text-left px-2 py-1.5 border border-neutral-200 rounded hover:bg-neutral-50">
-                    <span class="font-medium">budi</span> <span class="text-neutral-400">· Koordinator</span>
+                <button type="button" onclick="fillDemo('Raditya', 'password123')" class="text-left px-2 py-1.5 border border-neutral-200 rounded hover:bg-neutral-50">
+                    <span class="font-medium">Raditya</span> <span class="text-neutral-400">· Koordinator</span>
                 </button>
             </div>
         </div>
