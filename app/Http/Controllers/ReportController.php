@@ -56,7 +56,7 @@ class ReportController extends Controller
             'waktu_kejadian'    => 'required|date',
             'latitude'          => 'required|numeric|between:-90,90',
             'longitude'         => 'required|numeric|between:-180,180',
-            'evidence'          => 'nullable|image|max:2048', // foto bukti opsional max 2MB
+            'evidence'          => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
         $evidencePath = null;
         if ($request->hasFile('evidence')) {
