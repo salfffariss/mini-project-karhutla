@@ -93,12 +93,17 @@ class ReportController extends Controller
             abort(403);
         }
 
+        $report = Report::findOrFail($id);
+
+        if (in_array($report->status, ['selesai', 'ditolak'])) {
+            return back()->withErrors(['status' => 'Laporan berstatus final (' . $report->status . ') terkunci dan tidak dapat diubah lagi.']);
+        }
+
         $validated = $request->validate([
             'status'          => 'required|in:menunggu_tinjauan,terverifikasi,ditolak,diteruskan,selesai',
             'catatan_relawan' => 'nullable|string',
         ]);
 
-        $report = Report::findOrFail($id);
         $report->update([
             'status'          => $validated['status'],
             'catatan_relawan' => $validated['catatan_relawan'],

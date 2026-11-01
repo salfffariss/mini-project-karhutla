@@ -67,6 +67,12 @@
 
 <a href="{{ route('dashboard') }}" class="btn-back">&larr; Kembali ke Dashboard</a>
 
+@if ($errors->any())
+    <div style="border: 1px solid #999; background: #fff0f0; color: #900; padding: 10px; font-size: 13px; margin-bottom: 16px;">
+        {{ $errors->first() }}
+    </div>
+@endif
+
 <div class="detail-card">
     <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 12px;">
         <h2 style="margin: 0; font-size: 18px;">{{ $report->judul }}</h2>
@@ -135,31 +141,37 @@
 </div>
 
 @if (auth()->user()->role !== 'pelapor')
-<div class="form-box">
-    <h3 style="margin-top: 0; font-size: 14px;">Tindakan Petugas: Pembaruan Status & Catatan</h3>
-
-    <form action="{{ route('reports.status.update', $report->id) }}" method="POST">
-        @csrf
-        @method('PATCH')
-
-        <div style="margin-bottom: 12px;">
-            <label style="font-size: 12px; font-weight: bold;">Status Laporan</label>
-            <select name="status" required>
-                <option value="menunggu_tinjauan" {{ $report->status === 'menunggu_tinjauan' ? 'selected' : '' }}>Menunggu Tinjauan</option>
-                <option value="terverifikasi" {{ $report->status === 'terverifikasi' ? 'selected' : '' }}>Terverifikasi</option>
-                <option value="ditolak" {{ $report->status === 'ditolak' ? 'selected' : '' }}>Ditolak</option>
-                <option value="diteruskan" {{ $report->status === 'diteruskan' ? 'selected' : '' }}>Diteruskan</option>
-                <option value="selesai" {{ $report->status === 'selesai' ? 'selected' : '' }}>Selesai</option>
-            </select>
+    @if (in_array($report->status, ['selesai', 'ditolak']))
+        <div style="border: 1px solid #ccc; background: #f9f9f9; padding: 14px; font-size: 13px; color: #555; margin-top: 20px;">
+            Status laporan ini bersifat final (<b>{{ str_replace('_', ' ', $report->status) }}</b>) dan terkunci dari perubahan lebih lanjut.
         </div>
+    @else
+        <div class="form-box">
+            <h3 style="margin-top: 0; font-size: 14px;">Tindakan Petugas: Pembaruan Status & Catatan</h3>
 
-        <div style="margin-bottom: 12px;">
-            <label style="font-size: 12px; font-weight: bold;">Catatan Lapangan / Keterangan Penanganan</label>
-            <textarea name="catatan_relawan" rows="3" placeholder="Masukkan keterangan pengecekan darat atau penanganan tim...">{{ old('catatan_relawan', $report->catatan_relawan) }}</textarea>
+            <form action="{{ route('reports.status.update', $report->id) }}" method="POST">
+                @csrf
+                @method('PATCH')
+
+                <div style="margin-bottom: 12px;">
+                    <label style="font-size: 12px; font-weight: bold;">Status Laporan</label>
+                    <select name="status" required>
+                        <option value="menunggu_tinjauan" {{ $report->status === 'menunggu_tinjauan' ? 'selected' : '' }}>Menunggu Tinjauan</option>
+                        <option value="terverifikasi" {{ $report->status === 'terverifikasi' ? 'selected' : '' }}>Terverifikasi</option>
+                        <option value="ditolak" {{ $report->status === 'ditolak' ? 'selected' : '' }}>Ditolak</option>
+                        <option value="diteruskan" {{ $report->status === 'diteruskan' ? 'selected' : '' }}>Diteruskan</option>
+                        <option value="selesai" {{ $report->status === 'selesai' ? 'selected' : '' }}>Selesai</option>
+                    </select>
+                </div>
+
+                <div style="margin-bottom: 12px;">
+                    <label style="font-size: 12px; font-weight: bold;">Catatan Lapangan / Keterangan Penanganan</label>
+                    <textarea name="catatan_relawan" rows="3" placeholder="Masukkan keterangan pengecekan darat atau penanganan tim...">{{ old('catatan_relawan', $report->catatan_relawan) }}</textarea>
+                </div>
+
+                <button type="submit" class="btn-action">Simpan Perubahan Status</button>
+            </form>
         </div>
-
-        <button type="submit" class="btn-action">Simpan Perubahan Status</button>
-    </form>
-</div>
+    @endif
 @endif
 @endsection
