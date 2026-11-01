@@ -75,4 +75,35 @@ class ReportController extends Controller
         ]);
         return redirect()->route('dashboard')->with('success', 'Laporan kejadian karhutla berhasil dikirim dan menunggu tinjauan relawan.');
     }
+
+    public function show($id)
+    {
+        $report = Report::with(['user', 'area'])->findOrFail($id);
+
+        if (auth()->user()->role === 'pelapor' && $report->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        return view('reports.show', compact('report'));
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        if (auth()->user()->role === 'pelapor') {
+            abort(403);
+        }
+
+        $validated = $request->validate([
+            'status'          => 'required|in:menunggu_tinjauan,terverifikasi,ditolak,diteruskan,selesai',
+            'catatan_relawan' => 'nullable|string',
+        ]);
+
+        $report = Report::findOrFail($id);
+        $report->update([
+            'status'          => $validated['status'],
+            'catatan_relawan' => $validated['catatan_relawan'],
+        ]);
+
+        return redirect()->route('reports.show', $report->id)->with('success', 'Status dan catatan laporan berhasil diperbarui.');
+    }
 }

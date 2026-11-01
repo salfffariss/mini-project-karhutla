@@ -16,4 +16,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [ReportController::class, 'index'])->name('dashboard');
     Route::get('/reports/create', [ReportController::class, 'create'])->name('reports.create');
     Route::post('/reports', [ReportController::class, 'store'])->name('reports.store');
+    Route::get('/reports/{id}', [ReportController::class, 'show'])->name('reports.show');
+    Route::patch('/reports/{id}/status', [ReportController::class, 'updateStatus'])->name('reports.status.update');
 });

@@ -123,6 +123,7 @@
                 @endif
                 <th style="width: 90px;">Bukti Foto</th>
                 <th style="width: 140px;">Status</th>
+                <th style="width: 70px; text-align: center;">Aksi</th>
             </tr>
         </thead>
         <tbody>
@@ -159,6 +160,11 @@
                         <span style="border: 1px solid #888; padding: 2px 6px; font-size: 11px; text-transform: uppercase;">
                             {{ str_replace('_', ' ', $r->status) }}
                         </span>
+                    </td>
+                    <td style="text-align: center;">
+                        <a href="{{ route('reports.show', $r->id) }}" style="font-size: 11px; padding: 2px 6px; border: 1px solid #333; color: #333; text-decoration: none;">
+                            Detail
+                        </a>
                     </td>
                 </tr>
             @endforeach
