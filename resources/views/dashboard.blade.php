@@ -159,67 +159,69 @@
         @endif
     </div>
 @else
-    <table class="data-table">
-        <thead>
-            <tr>
-                <th style="width: 130px;">Waktu</th>
-                <th>Judul & Kondisi</th>
-                <th>Lokasi Area</th>
-                @if (auth()->user()->role !== 'pelapor')
-                    <th>Pelapor</th>
-                @endif
-                <th style="width: 90px;">Bukti Foto</th>
-                <th style="width: 140px;">Status</th>
-                <th style="width: 70px; text-align: center;">Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($reports as $r)
+    <div style="overflow-x: auto;">
+        <table class="data-table">
+            <thead>
                 <tr>
-                    <td style="color: #555;">
-                        {{ \Carbon\Carbon::parse($r->waktu_kejadian)->format('d/m/Y H:i') }}
-                    </td>
-                    <td>
-                        <b>{{ $r->judul }}</b>
-                        <div style="font-size: 11px; color: #555; margin-top: 3px;">
-                            {{ $r->deskripsi_kondisi }}
-                        </div>
-                    </td>
-                    <td>
-                        {{ $r->area->nama_area }}
-                        <div style="font-size: 11px; color: #666;">
-                            Kerawanan: {{ ucfirst($r->area->tingkat_kerawanan) }}
-                        </div>
-                    </td>
+                    <th style="width: 130px;">Waktu</th>
+                    <th>Judul & Kondisi</th>
+                    <th>Lokasi Area</th>
                     @if (auth()->user()->role !== 'pelapor')
-                        <td>{{ $r->user->nama_lengkap }}</td>
+                        <th>Pelapor</th>
                     @endif
-                    <td style="text-align: center;">
-                        @if ($r->evidence_path)
-                            <a href="{{ asset('storage/' . $r->evidence_path) }}" target="_blank" style="color: #0066cc; font-size: 11px; text-decoration: underline;">
-                                [Lihat Foto]
-                            </a>
-                        @else
-                            <span style="color: #999; font-size: 11px;">-</span>
-                        @endif
-                    </td>
-                    <td>
-                        <span style="border: 1px solid #888; padding: 2px 6px; font-size: 11px; text-transform: uppercase;">
-                            {{ str_replace('_', ' ', $r->status) }}
-                        </span>
-                    </td>
-                    <td style="text-align: center; white-space: nowrap;">
-                        <button type="button" onclick="quickView({{ $r->id }})" style="font-size: 11px; padding: 2px 6px; border: 1px solid #888; background: #fff; color: #333; cursor: pointer;">
-                            Cek
-                        </button>
-                        <a href="{{ route('reports.show', $r->id) }}" style="font-size: 11px; padding: 2px 6px; border: 1px solid #333; color: #333; text-decoration: none;">
-                            Detail
-                        </a>
-                    </td>
+                    <th style="width: 90px;">Bukti Foto</th>
+                    <th style="width: 140px;">Status</th>
+                    <th style="width: 70px; text-align: center;">Aksi</th>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach ($reports as $r)
+                    <tr>
+                        <td style="color: #555;">
+                            {{ \Carbon\Carbon::parse($r->waktu_kejadian)->format('d/m/Y H:i') }}
+                        </td>
+                        <td>
+                            <b>{{ $r->judul }}</b>
+                            <div style="font-size: 11px; color: #555; margin-top: 3px;">
+                                {{ $r->deskripsi_kondisi }}
+                            </div>
+                        </td>
+                        <td>
+                            {{ $r->area->nama_area }}
+                            <div style="font-size: 11px; color: #666;">
+                                Kerawanan: {{ ucfirst($r->area->tingkat_kerawanan) }}
+                            </div>
+                        </td>
+                        @if (auth()->user()->role !== 'pelapor')
+                            <td>{{ $r->user->nama_lengkap }}</td>
+                        @endif
+                        <td style="text-align: center;">
+                            @if ($r->evidence_path)
+                                <a href="{{ asset('storage/' . $r->evidence_path) }}" target="_blank" style="color: #0066cc; font-size: 11px; text-decoration: underline;">
+                                    [Lihat Foto]
+                                </a>
+                            @else
+                                <span style="color: #999; font-size: 11px;">-</span>
+                            @endif
+                        </td>
+                        <td>
+                            <span style="border: 1px solid #888; padding: 2px 6px; font-size: 11px; text-transform: uppercase;">
+                                {{ str_replace('_', ' ', $r->status) }}
+                            </span>
+                        </td>
+                        <td style="text-align: center; white-space: nowrap;">
+                            <button type="button" onclick="quickView({{ $r->id }})" style="font-size: 11px; padding: 2px 6px; border: 1px solid #888; background: #fff; color: #333; cursor: pointer;">
+                                Cek
+                            </button>
+                            <a href="{{ route('reports.show', $r->id) }}" style="font-size: 11px; padding: 2px 6px; border: 1px solid #333; color: #333; text-decoration: none;">
+                                Detail
+                            </a>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 @endif
 
 <script>

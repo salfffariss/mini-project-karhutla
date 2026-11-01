@@ -89,5 +89,8 @@
         @yield('content')
     </div>
 
+    <footer style="border-top: 1px solid #eee; text-align: center; padding: 16px 0; margin-top: 40px; font-size: 11px; color: #888;">
+        Sistem Informasi Pemantauan dan Pelaporan Kebakaran Hutan &amp; Lahan (Karhutla) &bull; {{ date('Y') }}
+    </footer>
 </body>
 </html>

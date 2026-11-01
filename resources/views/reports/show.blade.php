@@ -115,7 +115,8 @@
     <div class="detail-row">
         <div class="detail-label">Titik Koordinat</div>
         <div class="detail-value">
-            Latitude: {{ $report->latitude }}, Longitude: {{ $report->longitude }}
+            {{ $report->latitude }}, {{ $report->longitude }}
+            <a href="https://www.google.com/maps?q={{ $report->latitude }},{{ $report->longitude }}" target="_blank" style="margin-left: 8px; font-size: 11px; color: #0066cc; text-decoration: underline;">[Buka di Peta]</a>
         </div>
     </div>
 
