@@ -65,7 +65,19 @@
     }
 </style>
 
-<a href="{{ route('dashboard') }}" class="btn-back">&larr; Kembali ke Dashboard</a>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+    <a href="{{ route('dashboard') }}" class="btn-back" style="margin-bottom: 0;">&larr; Kembali ke Dashboard</a>
+    @if (auth()->user()->role === 'pelapor' && $report->user_id === auth()->id() && $report->status === 'menunggu_tinjauan')
+        <div style="display: flex; gap: 8px;">
+            <a href="{{ route('reports.edit', $report->id) }}" style="padding: 6px 12px; border: 1px solid #333; background: #fff; color: #333; text-decoration: none; font-size: 12px;">Edit Laporan</a>
+            <form action="{{ route('reports.destroy', $report->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin membatalkan/menghapus laporan ini?');" style="margin: 0;">
+                @csrf
+                @method('DELETE')
+                <button type="submit" style="padding: 6px 12px; border: 1px solid #900; background: #fff; color: #900; font-size: 12px; cursor: pointer;">Hapus</button>
+            </form>
+        </div>
+    @endif
+</div>
 
 @if ($errors->any())
     <div style="border: 1px solid #999; background: #fff0f0; color: #900; padding: 10px; font-size: 13px; margin-bottom: 16px;">

@@ -111,4 +111,68 @@ class ReportController extends Controller
 
         return redirect()->route('reports.show', $report->id)->with('success', 'Status dan catatan laporan berhasil diperbarui.');
     }
+
+    public function edit($id)
+    {
+        $report = Report::findOrFail($id);
+
+        if (auth()->user()->role !== 'pelapor' || $report->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        if ($report->status !== 'menunggu_tinjauan') {
+            return redirect()->route('reports.show', $report->id)->withErrors(['status' => 'Laporan yang telah ditinjau tidak dapat diubah lagi.']);
+        }
+
+        $areas = Area::all();
+        return view('reports.edit', compact('report', 'areas'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $report = Report::findOrFail($id);
+
+        if (auth()->user()->role !== 'pelapor' || $report->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        if ($report->status !== 'menunggu_tinjauan') {
+            return redirect()->route('reports.show', $report->id)->withErrors(['status' => 'Laporan yang telah ditinjau tidak dapat diubah lagi.']);
+        }
+
+        $validated = $request->validate([
+            'area_id'           => 'required|exists:areas,id',
+            'judul'             => 'required|string|max:255',
+            'deskripsi_kondisi' => 'required|string',
+            'waktu_kejadian'    => 'required|date',
+            'latitude'          => 'required|numeric|between:-90,90',
+            'longitude'         => 'required|numeric|between:-180,180',
+            'evidence'          => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        if ($request->hasFile('evidence')) {
+            $validated['evidence_path'] = $request->file('evidence')->store('evidence', 'public');
+        }
+
+        $report->update($validated);
+
+        return redirect()->route('reports.show', $report->id)->with('success', 'Laporan berhasil diperbarui.');
+    }
+
+    public function destroy($id)
+    {
+        $report = Report::findOrFail($id);
+
+        if (auth()->user()->role !== 'pelapor' || $report->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        if ($report->status !== 'menunggu_tinjauan') {
+            return redirect()->route('reports.show', $report->id)->withErrors(['status' => 'Laporan yang telah ditinjau tidak dapat dihapus.']);
+        }
+
+        $report->delete();
+
+        return redirect()->route('dashboard')->with('success', 'Laporan berhasil dihapus.');
+    }
 }
