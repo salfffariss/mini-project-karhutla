@@ -187,4 +187,24 @@ class ReportController extends Controller
 
         return redirect()->route('dashboard')->with('success', 'Laporan berhasil dihapus.');
     }
+
+    public function apiShow($id)
+    {
+        $report = Report::with(['user', 'area'])->findOrFail($id);
+
+        if (auth()->user()->role === 'pelapor' && $report->user_id !== auth()->id()) {
+            return response()->json(['error' => 'Akses ditolak'], 403);
+        }
+
+        return response()->json([
+            'id'                => $report->id,
+            'judul'             => $report->judul,
+            'area'              => $report->area->nama_area,
+            'status'            => str_replace('_', ' ', $report->status),
+            'latitude'          => $report->latitude,
+            'longitude'         => $report->longitude,
+            'deskripsi_kondisi' => $report->deskripsi_kondisi,
+            'pelapor'           => $report->user->nama_lengkap,
+        ]);
+    }
 }

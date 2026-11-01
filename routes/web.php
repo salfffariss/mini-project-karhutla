@@ -21,4 +21,5 @@ Route::middleware('auth')->group(function () {
     Route::put('/reports/{id}', [ReportController::class, 'update'])->name('reports.update');
     Route::delete('/reports/{id}', [ReportController::class, 'destroy'])->name('reports.destroy');
     Route::patch('/reports/{id}/status', [ReportController::class, 'updateStatus'])->name('reports.status.update');
+    Route::get('/api/reports/{id}', [ReportController::class, 'apiShow'])->name('api.reports.show');
 });

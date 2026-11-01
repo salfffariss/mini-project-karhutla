@@ -133,6 +133,18 @@
     @endif
 </form>
 
+<div id="quick-view-box" style="display:none; border: 1px solid #333; background: #fff; padding: 12px; margin-bottom: 16px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 6px; margin-bottom: 8px;">
+        <span style="font-size: 13px; font-weight: bold;">Pratinjau Cepat: <span id="qv-title"></span></span>
+        <button type="button" onclick="closeQuickView()" style="border: 1px solid #ccc; background: #fff; cursor: pointer; padding: 2px 6px; font-size: 11px;">Tutup</button>
+    </div>
+    <div style="font-size: 12px; line-height: 1.6; color: #333;">
+        <div><b>Area:</b> <span id="qv-area"></span> | <b>Status:</b> <span id="qv-status" style="text-transform: uppercase;"></span></div>
+        <div><b>Koordinat:</b> <span id="qv-coords"></span></div>
+        <div style="margin-top: 4px;"><b>Kondisi:</b> <span id="qv-desc"></span></div>
+    </div>
+</div>
+
 <h3 style="font-size: 14px; margin-bottom: 8px;">Daftar Kejadian ({{ $reports->count() }} Data)</h3>
 
 @if ($reports->isEmpty())
@@ -196,7 +208,10 @@
                             {{ str_replace('_', ' ', $r->status) }}
                         </span>
                     </td>
-                    <td style="text-align: center;">
+                    <td style="text-align: center; white-space: nowrap;">
+                        <button type="button" onclick="quickView({{ $r->id }})" style="font-size: 11px; padding: 2px 6px; border: 1px solid #888; background: #fff; color: #333; cursor: pointer;">
+                            Cek
+                        </button>
                         <a href="{{ route('reports.show', $r->id) }}" style="font-size: 11px; padding: 2px 6px; border: 1px solid #333; color: #333; text-decoration: none;">
                             Detail
                         </a>
@@ -206,4 +221,23 @@
         </tbody>
     </table>
 @endif
+
+<script>
+    function quickView(id) {
+        fetch('{{ url('/api/reports') }}/' + id)
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('quick-view-box').style.display = 'block';
+                document.getElementById('qv-title').innerText = data.judul;
+                document.getElementById('qv-area').innerText = data.area;
+                document.getElementById('qv-status').innerText = data.status;
+                document.getElementById('qv-coords').innerText = data.latitude + ', ' + data.longitude;
+                document.getElementById('qv-desc').innerText = data.deskripsi_kondisi;
+            });
+    }
+
+    function closeQuickView() {
+        document.getElementById('quick-view-box').style.display = 'none';
+    }
+</script>
 @endsection
