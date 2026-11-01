@@ -105,6 +105,34 @@
     </div>
 </div>
 
+<form method="GET" action="{{ route('dashboard') }}" style="display: flex; gap: 8px; align-items: center; background: #fafafa; border: 1px solid #ccc; padding: 10px; margin-bottom: 16px;">
+    <span style="font-size: 12px; font-weight: bold; color: #444;">Filter:</span>
+    
+    <select name="area_id" style="padding: 6px; border: 1px solid #ccc; font-size: 12px;">
+        <option value="">-- Semua Area Kerawanan --</option>
+        @foreach ($areas as $a)
+            <option value="{{ $a->id }}" {{ request('area_id') == $a->id ? 'selected' : '' }}>
+                {{ $a->nama_area }} ({{ ucfirst($a->tingkat_kerawanan) }})
+            </option>
+        @endforeach
+    </select>
+
+    <select name="status" style="padding: 6px; border: 1px solid #ccc; font-size: 12px;">
+        <option value="">-- Semua Status --</option>
+        <option value="menunggu_tinjauan" {{ request('status') === 'menunggu_tinjauan' ? 'selected' : '' }}>Menunggu Tinjauan</option>
+        <option value="terverifikasi" {{ request('status') === 'terverifikasi' ? 'selected' : '' }}>Terverifikasi</option>
+        <option value="ditolak" {{ request('status') === 'ditolak' ? 'selected' : '' }}>Ditolak</option>
+        <option value="diteruskan" {{ request('status') === 'diteruskan' ? 'selected' : '' }}>Diteruskan</option>
+        <option value="selesai" {{ request('status') === 'selesai' ? 'selected' : '' }}>Selesai</option>
+    </select>
+
+    <button type="submit" style="padding: 6px 12px; background: #222; color: #fff; border: 1px solid #222; font-size: 12px; cursor: pointer;">Terapkan</button>
+    
+    @if (request()->hasAny(['area_id', 'status']))
+        <a href="{{ route('dashboard') }}" style="font-size: 12px; color: #666; text-decoration: underline; margin-left: 4px;">Reset Filter</a>
+    @endif
+</form>
+
 <h3 style="font-size: 14px; margin-bottom: 8px;">Daftar Kejadian ({{ $reports->count() }} Data)</h3>
 
 @if ($reports->isEmpty())

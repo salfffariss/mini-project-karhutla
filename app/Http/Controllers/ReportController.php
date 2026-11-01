@@ -8,31 +8,42 @@ use App\Models\Area;
 
 class ReportController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = auth()->user();
 
-        // Ambil data laporan beserta relasi user dan areanya (eager loading)
         $query = Report::with(['user', 'area'])->latest();
 
-        // Aturan Hak Akses:
-        // Jika Pelapor: hanya tampilkan laporan miliknya sendiri.
-        // Jika Relawan / Koordinator: tampilkan semua laporan.
         if ($user->role === 'pelapor') {
             $query->where('user_id', $user->id);
         }
 
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('area_id')) {
+            $query->where('area_id', $request->area_id);
+        }
+
         $reports = $query->get();
 
-        // Ringkasan angka statistik sederhana
+        $statsQuery = Report::query();
+        if ($user->role === 'pelapor') {
+            $statsQuery->where('user_id', $user->id);
+        }
+        $allUserReports = $statsQuery->get();
+
         $stats = [
-            'total'             => $reports->count(),
-            'menunggu_tinjauan' => $reports->where('status', 'menunggu_tinjauan')->count(),
-            'terverifikasi'     => $reports->where('status', 'terverifikasi')->count(),
-            'selesai'           => $reports->where('status', 'selesai')->count(),
+            'total'             => $allUserReports->count(),
+            'menunggu_tinjauan' => $allUserReports->where('status', 'menunggu_tinjauan')->count(),
+            'terverifikasi'     => $allUserReports->where('status', 'terverifikasi')->count(),
+            'selesai'           => $allUserReports->where('status', 'selesai')->count(),
         ];
 
-        return view('dashboard', compact('reports', 'stats'));
+        $areas = Area::all();
+
+        return view('dashboard', compact('reports', 'stats', 'areas'));
     }
 
     public function create()
