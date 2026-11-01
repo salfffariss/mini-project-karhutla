@@ -137,7 +137,14 @@
 
 @if ($reports->isEmpty())
     <div style="border: 1px solid #ccc; padding: 20px; text-align: center; color: #777; font-size: 13px;">
-        Belum ada data laporan yang tercatat.
+        @if (request()->hasAny(['area_id', 'status']))
+            Tidak ada laporan yang sesuai dengan filter yang dipilih.
+            <div style="margin-top: 8px;">
+                <a href="{{ route('dashboard') }}" style="font-size: 12px; color: #000; text-decoration: underline;">Kembali ke Semua Laporan</a>
+            </div>
+        @else
+            Belum ada data laporan yang tercatat.
+        @endif
     </div>
 @else
     <table class="data-table">

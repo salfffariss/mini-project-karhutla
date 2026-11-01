@@ -18,11 +18,12 @@ class ReportController extends Controller
             $query->where('user_id', $user->id);
         }
 
-        if ($request->filled('status')) {
+        $allowedStatuses = ['menunggu_tinjauan', 'terverifikasi', 'ditolak', 'diteruskan', 'selesai'];
+        if ($request->filled('status') && in_array($request->status, $allowedStatuses)) {
             $query->where('status', $request->status);
         }
 
-        if ($request->filled('area_id')) {
+        if ($request->filled('area_id') && is_numeric($request->area_id)) {
             $query->where('area_id', $request->area_id);
         }
 
